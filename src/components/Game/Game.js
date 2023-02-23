@@ -1,5 +1,7 @@
 import React from 'react';
-
+import GuessEntry from '../GuessEntry';
+import GuessResults from '../GuessResults';
+import ErrorBoundary from '../ErrorBoundary';
 import { sample } from '../../utils';
 import { WORDS } from '../../data';
 
@@ -9,7 +11,24 @@ const answer = sample(WORDS);
 console.info({ answer });
 
 function Game() {
-  return <>Put a game here!</>;
+  const [guesses, setGuesses] = React.useState([]);
+
+  function handleGuess(guess) {
+    const nextGuesses = [...guesses, guess];
+    console.log({ nextGuesses });
+    setGuesses(nextGuesses);
+  }
+
+  return (
+    <>
+      <ErrorBoundary>
+        <GuessResults items={guesses} />
+      </ErrorBoundary>
+      <ErrorBoundary>
+        <GuessEntry handleGuess={handleGuess} />
+      </ErrorBoundary>
+    </>
+  );
 }
 
 export default Game;

@@ -13,3 +13,11 @@ export const range = (start, end, step = 1) => {
   }
   return output;
 };
+
+export const emptyRange = (count, step = 1) => {
+  let output = [];
+  for (let i = 0; i < count; i += step) {
+    output.push('');
+  }
+  return output;
+};
