@@ -7,7 +7,6 @@ function Cell({ guessResult }) {
     return <span className="cell"></span>;
   } else {
     const { status, letter } = guessResult;
-    console.log({ status, letter });
     return <span className={`cell ${status}`}>{letter}</span>;
   }
 }
