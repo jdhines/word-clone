@@ -15,14 +15,13 @@ function Game() {
 
   function handleGuess(guess) {
     const nextGuesses = [...guesses, guess];
-    console.log({ nextGuesses });
     setGuesses(nextGuesses);
   }
 
   return (
     <>
       <ErrorBoundary>
-        <GuessResults items={guesses} />
+        <GuessResults items={guesses} answer={answer} />
       </ErrorBoundary>
       <ErrorBoundary>
         <GuessEntry handleGuess={handleGuess} />
