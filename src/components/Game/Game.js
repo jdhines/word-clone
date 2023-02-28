@@ -2,7 +2,8 @@ import React from 'react';
 import GuessEntry from '../GuessEntry';
 import GuessResults from '../GuessResults';
 import ErrorBoundary from '../ErrorBoundary';
-import ResultBanner from '../ResultBanner/ResultBanner';
+import WonBanner from '../WonBanner';
+import LostBanner from '../LostBanner';
 import { sample } from '../../utils';
 import { WORDS } from '../../data';
 import { NUM_OF_GUESSES_ALLOWED } from '../../constants';
@@ -10,7 +11,7 @@ import { NUM_OF_GUESSES_ALLOWED } from '../../constants';
 function Game() {
   const [answer, setAnswer] = React.useState(sample(WORDS));
   const [guesses, setGuesses] = React.useState([]);
-  const [isGameOver, setIsGameOver] = React.useState(false);
+  const [gameStatus, setGameStatus] = React.useState('running');
 
   // To make debugging easier, we'll log the solution in the console.
   console.info({ answer });
@@ -21,14 +22,16 @@ function Game() {
 
     //guesses is updated on the next scheduled refresh
     //so if we used guesses.length, it would still be the previous length
-    if (nextGuesses.length >= NUM_OF_GUESSES_ALLOWED || guess === answer) {
-      setIsGameOver(true);
+    if (nextGuesses.length >= NUM_OF_GUESSES_ALLOWED) {
+      setGameStatus('lost');
+    } else if (guess === answer) {
+      setGameStatus('won');
     }
   }
 
   function handleNewGame() {
     setGuesses([]);
-    setIsGameOver(false);
+    setGameStatus(false);
     setAnswer(sample(WORDS));
     console.info({ answer });
   }
@@ -39,14 +42,13 @@ function Game() {
         <GuessResults items={guesses} answer={answer} />
       </ErrorBoundary>
       <ErrorBoundary>
-        <GuessEntry handleGuess={handleGuess} isGameOver={isGameOver} />
+        <GuessEntry handleGuess={handleGuess} gameStatus={gameStatus} />
       </ErrorBoundary>
-      {isGameOver && (
-        <ResultBanner
-          guesses={guesses}
-          answer={answer}
-          handleNewGame={handleNewGame}
-        />
+      {gameStatus === 'won' && (
+        <WonBanner numGuesses={guesses.length} handleNewGame={handleNewGame} />
+      )}
+      {gameStatus === 'lost' && (
+        <LostBanner answer={answer} handleNewGame={handleNewGame} />
       )}
     </>
   );
